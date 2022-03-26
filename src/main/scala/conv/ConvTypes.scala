@@ -20,6 +20,7 @@ import java.sql.Time
 import java.sql.Date
 import java.sql.Timestamp
 import java.sql.ResultSet
+import java.util.UUID
 
 
 object StringConv extends ValConv[String] {
@@ -66,6 +67,9 @@ object TimestampConv extends ValConv[Timestamp] {
   def get(rs: ResultSet, index: Int) = rs.getTimestamp(index)
 }
 
+object UUIDConv extends ValConv[UUID] {
+  def get(rs: ResultSet, index: Int) = UUID.fromString(rs.getString(index))
+}
 
 
 

@@ -62,8 +62,8 @@ case class DateOptCol(underlying: AnyCol) extends DateOptColValue
 case class TimestampOptCol(underlying: AnyCol) extends TimestampOptColValue
                                                   with UnderlyingRenderAndArgs
 
-
-
+case class UUIDOptCol(underlying: AnyCol) extends UUIDOptColValue
+                                                  with UnderlyingRenderAndArgs
 
 
 

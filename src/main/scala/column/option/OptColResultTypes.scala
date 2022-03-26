@@ -21,6 +21,8 @@ import java.sql.Date
 import java.sql.Timestamp
 import kuzminki.conv._
 
+import java.util.UUID
+
 
 trait StringOptColValue extends TypeOptCol[String] {
   val conv = StringOptConv
@@ -66,7 +68,9 @@ trait TimestampOptColValue extends TypeOptCol[Timestamp] {
   val conv = TimestampOptConv
 }
 
-
+trait UUIDOptColValue extends TypeOptCol[UUID] {
+  val conv = UUIDOptConv
+}
 
 
 

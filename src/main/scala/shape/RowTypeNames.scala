@@ -39,6 +39,7 @@ trait RowTypeNames {
     case col: TimeCol               => "Time"
     case col: DateCol               => "Date"
     case col: TimestampCol          => "Timestamp"
+    case col: UUIDCol               => "java.util.UUID"
     case col: StringOptCol          => "Option[String]"
     case col: BooleanOptCol         => "Option[Boolean]"
     case col: ShortOptCol           => "Option[Short]"
@@ -50,6 +51,7 @@ trait RowTypeNames {
     case col: TimeOptCol            => "Option[Time]"
     case col: DateOptCol            => "Option[Date]"
     case col: TimestampOptCol       => "Option[Timestamp]"
+    case col: UUIDOptCol            => "Option[java.util.UUID]"
     case col => throw KuzminkiError(s"Unsupported column type: [$col]")
   }
 

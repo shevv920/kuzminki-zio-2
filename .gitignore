@@ -13,3 +13,4 @@ target/
 generated/
 project/project/
 project/target/
+.idea/

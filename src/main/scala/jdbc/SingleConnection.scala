@@ -19,28 +19,23 @@ package kuzminki.jdbc
 import zio._
 import zio.ZIO.attemptBlocking
 
-import java.util.Properties
+import java.util.{Properties, UUID}
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
-import java.sql.{Statement, PreparedStatement}
+import java.sql.{PreparedStatement, Statement}
 import java.sql.ResultSet
 import java.sql.Time
 import java.sql.Date
 import java.sql.Timestamp
-
 import scala.concurrent.duration._
 import scala.reflect.runtime.universe._
-import scala.util.{Try, Success, Failure}
-import scala.reflect.{classTag, ClassTag}
+import scala.util.{Failure, Success, Try}
+import scala.reflect.{ClassTag, classTag}
 import scala.collection.mutable.ListBuffer
-
 import kuzminki.api.{DbConfig, KuzminkiError}
 import kuzminki.shape.RowConv
-import kuzminki.render.{
-  RenderedQuery,
-  RenderedOperation
-}
+import kuzminki.render.{RenderedOperation, RenderedQuery}
 
 
 object SingleConnection {
@@ -67,6 +62,7 @@ class SingleConnection(conn: Connection) {
       case value: Time        => jdbcStm.setTime(index, value)
       case value: Date        => jdbcStm.setDate(index, value)
       case value: Timestamp   => jdbcStm.setTimestamp(index, value)
+      case value: UUID        => jdbcStm.setObject(index,  value)
       case _ => throw KuzminkiError(s"type not supported [$arg]")
     }
   }

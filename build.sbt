@@ -7,7 +7,7 @@ crossScalaVersions := Seq(scala212, scala213)
 
 name := "kuzminki-zio-2"
 
-version := "0.9.2"
+version := "0.9.2-uuid3"
 
 scalacOptions ++= Seq(
   "-deprecation",
@@ -18,7 +18,7 @@ lazy val root = (project in file("."))
   .settings(
     name := "kuzminki-zio",
     libraryDependencies ++= Seq(
-      "org.postgresql" % "postgresql" % "42.2.24",
+      "org.postgresql" % "postgresql" % "42.3.3",
       "dev.zio" %% "zio" % "2.0.0-RC2"
     ),
     libraryDependencies ++= {

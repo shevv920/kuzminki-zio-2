@@ -44,6 +44,7 @@ object TypeReader {
     case "java.sql.Time" => TimeConv
     case "java.sql.Date" => DateConv
     case "java.sql.Timestamp" => TimestampConv
+    case "java.util.UUID" => UUIDConv
     case name => throw KuzminkiError(s"Unsupported type: $name")
   }
   

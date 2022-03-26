@@ -19,6 +19,7 @@ package kuzminki
 import java.sql.Time
 import java.sql.Date
 import java.sql.Timestamp
+import java.util.UUID
 import scala.language.implicitConversions
 
 import kuzminki.column._
@@ -28,16 +29,10 @@ import kuzminki.assign.Assign
 import kuzminki.update.RenderUpdate
 import kuzminki.delete.RenderDelete
 import kuzminki.insert.RenderInsertData
-import kuzminki.select.{
-  RenderSelect,
-  SelectSubquery,
-  AggregationSubquery
-}
-import kuzminki.render.{
-  RawSQLStatement,
-  RenderedQuery,
-  RenderedOperation
-}
+import kuzminki.select.{AggregationSubquery, RenderSelect, SelectSubquery}
+import kuzminki.render.{RawSQLStatement, RenderedOperation, RenderedQuery}
+
+
 
 
 package object api {
@@ -57,7 +52,7 @@ package object api {
   implicit val implTimeCol: ColInfo => TypeCol[Time] = info => TimeModelCol(info)
   implicit val implDateCol: ColInfo => TypeCol[Date] = info => DateModelCol(info)
   implicit val implTimestampCol: ColInfo => TypeCol[Timestamp] = info => TimestampModelCol(info)
-
+  implicit val implUUIDCol: ColInfo => TypeCol[UUID] = info => UUIDModelCol(info)
   // model type col
 
   implicit val kzimplToStringModelCol: TypeCol[String] => StringModelCol = col => col.asInstanceOf[StringModelCol]
@@ -73,6 +68,7 @@ package object api {
   implicit val kzimplToTimeModelCol: TypeCol[Time] => TimeModelCol = col => col.asInstanceOf[TimeModelCol]
   implicit val kzimplToDateModelCol: TypeCol[Date] => DateModelCol = col => col.asInstanceOf[DateModelCol]
   implicit val kzimplToTimestampModelCol: TypeCol[Timestamp] => TimestampModelCol = col => col.asInstanceOf[TimestampModelCol]
+  implicit val kzimplToUUIDModelCol: TypeCol[UUID] => UUIDModelCol = col => col.asInstanceOf[UUIDModelCol]
 
   // type col
 
@@ -89,6 +85,7 @@ package object api {
   implicit val kzimplTypeColToTimeCol: TypeCol[Time] => TimeCol = col => col.asInstanceOf[TimeCol]
   implicit val kzimplTypeColToDateCol: TypeCol[Date] => DateCol = col => col.asInstanceOf[DateCol]
   implicit val kzimplTypeColToTimestampCol: TypeCol[Timestamp] => TimestampCol = col => col.asInstanceOf[TimestampCol]
+  implicit val kzimplTypeColToUUIDCol: TypeCol[UUID] => UUIDCol = col => col.asInstanceOf[UUIDCol]
 
   // pick one
 
