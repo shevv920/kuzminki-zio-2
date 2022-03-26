@@ -19,6 +19,7 @@ package kuzminki.column
 import java.sql.Time
 import java.sql.Date
 import java.sql.Timestamp
+import java.util.UUID
 
 
 case class StringModelCol(info: ColInfo) extends ModelCol
@@ -81,7 +82,9 @@ case class TimestampModelCol(info: ColInfo) extends ModelCol
                                                with TimestampCol
                                                with ModelTypeCol[Timestamp]
 
-
+case class UUIDModelCol(info: ColInfo) extends ModelCol
+                                                with UUIDCol
+                                                with ModelTypeCol[UUID]
 
 
 

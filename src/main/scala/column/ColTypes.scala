@@ -19,6 +19,7 @@ package kuzminki.column
 import java.sql.Time
 import java.sql.Date
 import java.sql.Timestamp
+import java.util.UUID
 
 
 trait StringCol extends StringColValue
@@ -123,6 +124,14 @@ trait TimestampCol extends TimestampColValue
 
   val self = this
   def asOpt = TimestampOptCol(this)
+}
+
+trait UUIDCol extends UUIDColValue
+                      with UniversalFilters[UUID]
+                      with ComparativeFilters[UUID] {
+
+  val self = this
+  def asOpt = UUIDOptCol(this)
 }
 
 

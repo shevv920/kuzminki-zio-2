@@ -13,6 +13,7 @@ libraryDependencies += "io.github.karimagnusson" % "kuzminki-zio-2" % "0.9.2"
 ```
 
 #### Example
+
 ```scala
 import zio._
 import kuzminki.api._
@@ -23,42 +24,43 @@ object ExampleApp extends ZIOAppDefault {
     val id = column[Int]("id")
     val username = column[String]("username")
     val age = column[Int]("age")
+
     def all = (id, username, age)
   }
 
-  val client = Model.get[Client]
+  val client = Model.get[Fruit]
 
   val job = for {
     _ <- sql
       .insert(client)
       .cols2(t => (t.username, t.age))
       .run(("Joe", 35))
-    
+
     _ <- sql
       .update(client)
       .set(_.age ==> 24)
       .where(_.id === 4)
       .run
-    
+
     _ <- sql.delete(client).where(_.id === 7).run
-    
+
     clients <- sql
       .select(client)
       .cols3(_.all)
       .where(_.age > 25)
       .limit(5)
       .run
-    
+
     _ <- ZIO.foreach(clients) {
       case (id, username, age) =>
         Console.printLine(s"$id $username $age")
     }
   } yield ()
 
-  val dbConfig = DDbConfig.forDb("company").getConfig
+  val dbConfig = DbConfig.forDb("company").getConfig
   val dbLayer = Kuzminki.layer(dbConfig)
 
-  def run = job.provideCustom(kuzminkiLayer)
+  def run = job.provideCustom(dbLayer)
 }
 ```
 

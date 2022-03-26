@@ -20,6 +20,8 @@ import java.sql.Time
 import java.sql.Date
 import java.sql.Timestamp
 import java.sql.ResultSet
+import java.util.UUID
+import scala.util.Try
 
 
 object StringOptConv extends ValOptConv[String] {
@@ -64,6 +66,10 @@ object DateOptConv extends ValOptConv[Date] {
 
 object TimestampOptConv extends ValOptConv[Timestamp] {
   def get(rs: ResultSet, index: Int) = Option(rs.getTimestamp(index))
+}
+
+object UUIDOptConv extends ValOptConv[UUID] {
+  def get(rs: ResultSet, index: Int) = Try(UUID.fromString(rs.getString(index))).toOption
 }
 
 
