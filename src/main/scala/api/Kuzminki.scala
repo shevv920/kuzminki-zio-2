@@ -47,7 +47,7 @@ object Kuzminki {
   } yield new DefaultApi(pool)
 
   def layer(conf: DbConfig): ZLayer[Any, Throwable, Kuzminki] = {
-    ZLayer.fromAcquireRelease(create(conf))(_.close)
+    ZLayer.scoped(ZIO.acquireRelease(create(conf))(_.close))
   }
 
   def createSplit(getConf: DbConfig,
@@ -58,7 +58,7 @@ object Kuzminki {
 
   def layerSplit(getConf: DbConfig,
                  setConf: DbConfig): ZLayer[Any, Throwable, Kuzminki] = {
-    ZLayer.fromAcquireRelease(createSplit(getConf, setConf))(_.close)
+    ZLayer.scoped(ZIO.acquireRelease(createSplit(getConf, setConf))(_.close))
   }
 
   def get = ZIO.service[Kuzminki]
@@ -90,33 +90,33 @@ private case class Pool(
 private class DefaultApi(pool: Pool) extends Kuzminki {
 
   def query[R](render: => RenderedQuery[R]): RIO[Any, List[R]] = for {
-    stm  <- Task.attempt { render }
+    stm  <- ZIO.attempt { render }
     conn <- pool.queue.take
     rows <- conn.query(stm).ensuring { pool.queue.offer(conn) }
   } yield rows
 
   def queryHead[R](render: => RenderedQuery[R]): RIO[Any, R] = for {
-    stm  <- Task.attempt { render }
+    stm  <- ZIO.attempt { render }
     conn <- pool.queue.take
     rows <- conn.query(stm).ensuring { pool.queue.offer(conn) }
-    head <- Task.attempt { rows.head }
+    head <- ZIO.attempt { rows.head }
   } yield head
 
   def queryHeadOpt[R](render: => RenderedQuery[R]): RIO[Any, Option[R]] = for {
-    stm     <- Task.attempt { render }
+    stm     <- ZIO.attempt { render }
     conn    <- pool.queue.take
     rows    <- conn.query(stm).ensuring { pool.queue.offer(conn) }
-    headOpt <- Task.attempt { rows.headOption }
+    headOpt <- ZIO.attempt { rows.headOption }
   } yield headOpt
 
   def exec(render: => RenderedOperation): RIO[Any, Unit] = for {
-    stm  <- Task.attempt { render }
+    stm  <- ZIO.attempt { render }
     conn <- pool.queue.take
     _    <- conn.exec(stm).ensuring { pool.queue.offer(conn) }
   } yield ()
 
   def execNum(render: => RenderedOperation): RIO[Any, Int] = for {
-    stm  <- Task.attempt { render }
+    stm  <- ZIO.attempt { render }
     conn <- pool.queue.take
     num  <- conn.execNum(stm).ensuring { pool.queue.offer(conn) }
   } yield num
@@ -131,33 +131,33 @@ private class DefaultApi(pool: Pool) extends Kuzminki {
 private class SplitApi(getPool: Pool, setPool: Pool) extends Kuzminki {
 
   def query[R](render: => RenderedQuery[R]): RIO[Any, List[R]] = for {
-    stm  <- Task.attempt { render }
+    stm  <- ZIO.attempt { render }
     conn <- getPool.queue.take
     rows <- conn.query(stm).ensuring { getPool.queue.offer(conn) }
   } yield rows
 
   def queryHead[R](render: => RenderedQuery[R]): RIO[Any, R] = for {
-    stm  <- Task.attempt { render }
+    stm  <- ZIO.attempt { render }
     conn <- getPool.queue.take
     rows <- conn.query(stm).ensuring { getPool.queue.offer(conn) }
-    head <- Task.attempt { rows.head }
+    head <- ZIO.attempt { rows.head }
   } yield head
 
   def queryHeadOpt[R](render: => RenderedQuery[R]): RIO[Any, Option[R]] = for {
-    stm     <- Task.attempt { render }
+    stm     <- ZIO.attempt { render }
     conn    <- getPool.queue.take
     rows    <- conn.query(stm).ensuring { getPool.queue.offer(conn) }
-    headOpt <- Task.attempt { rows.headOption }
+    headOpt <- ZIO.attempt { rows.headOption }
   } yield headOpt
 
   def exec(render: => RenderedOperation): RIO[Any, Unit] = for {
-    stm  <- Task.attempt { render }
+    stm  <- ZIO.attempt { render }
     conn <- setPool.queue.take
     _    <- conn.exec(stm).ensuring { setPool.queue.offer(conn) }
   } yield ()
 
   def execNum(render: => RenderedOperation): RIO[Any, Int] = for {
-    stm  <- Task.attempt { render }
+    stm  <- ZIO.attempt { render }
     conn <- setPool.queue.take
     num  <- conn.execNum(stm).ensuring { setPool.queue.offer(conn) }
   } yield num
