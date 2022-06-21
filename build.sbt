@@ -2,9 +2,9 @@ val scala213 = "2.13.8"
 
 scalaVersion := scala213
 
-name := "kuzminki-zio-2"
+name := "kuzminki-zio-2-fork"
 
-version := "0.9.2-uuid3-zio2-rc6"
+version := "0.9.2"
 
 scalacOptions ++= Seq(
   "-deprecation",
@@ -13,7 +13,7 @@ scalacOptions ++= Seq(
 
 lazy val root = (project in file("."))
   .settings(
-    name := "kuzminki-zio",
+    name := "kuzminki-zio-2-fork",
     libraryDependencies ++= Seq(
       "org.postgresql" % "postgresql" % "42.3.6",
       "dev.zio" %% "zio" % "2.0.0-RC6",
